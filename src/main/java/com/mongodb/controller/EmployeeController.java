@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mongodb.model.Employee;
 import com.mongodb.repository.EmployeeRepository;
+import com.mongodb.service.EmployeeService;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -25,6 +26,9 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+    
+    @Autowired
+    EmployeeService employeeService;
 
     @GetMapping("/getByAll")
     public List<Employee> getAllEmployees() {
@@ -36,6 +40,12 @@ public class EmployeeController {
         return employeeRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+    
+    
+    @GetMapping("/getByDepartment/{department}")
+    public List<Employee> getEmployeeByDep(@PathVariable("department") String department) {
+        return employeeService.getNameAndEmailbyDepartment(department);
     }
 
     @PostMapping
