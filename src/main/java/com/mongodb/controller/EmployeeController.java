@@ -66,6 +66,7 @@ public class EmployeeController {
 		}).orElse(ResponseEntity.notFound().build());
 	}
 
+    //Delete API
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteEmployee(@PathVariable("id") String id) {
         return employeeRepository.findById(id).map(employee -> {
