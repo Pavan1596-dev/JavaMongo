@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mongodb.model.Employee;
 import com.mongodb.repository.EmployeeRepository;
 import com.mongodb.service.EmployeeService;
+import com.mongodb.vo.EmployeeProjection;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -44,8 +45,13 @@ public class EmployeeController {
     
     
     @GetMapping("/getByDepartment/{department}")
-    public List<Employee> getEmployeeByDep(@PathVariable("department") String department) {
+    public List<EmployeeProjection> getEmployeeByDep(@PathVariable("department") String department) {
         return employeeService.getNameAndEmailbyDepartment(department);
+    }
+    
+    @GetMapping("/getEmpNameByDep/{department}")
+    public List<Employee> getEmployeeNameByDep(@PathVariable("department") String department) {
+        return employeeRepository.findEmpNameByDepartment(department);
     }
 
     @PostMapping
@@ -71,6 +77,9 @@ public class EmployeeController {
 			}
 			if (StringUtils.hasText(updatedEmployee.getDepartment())) {
 				employee.setDepartment(updatedEmployee.getDepartment());
+			}
+			if (updatedEmployee.getSalary() != null) {
+				employee.setSalary(updatedEmployee.getSalary());
 			}
 			return ResponseEntity.ok(employeeRepository.save(employee));
 		}).orElse(ResponseEntity.notFound().build());

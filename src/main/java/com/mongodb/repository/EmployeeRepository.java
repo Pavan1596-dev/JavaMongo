@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.mongodb.model.Employee;
+import com.mongodb.vo.EmployeeProjection;
 
 @Repository
 public interface EmployeeRepository extends MongoRepository<Employee, String> {
@@ -17,5 +18,8 @@ Return only required fields — faster + secure*/
 	List<Employee> findAllNameAndEmailOnly();
 	
     @Query(value = "{ 'department': ?0 }", fields = "{ 'name': 1, 'email': 1, '_id': 0 }")
-    List<Employee> findByDepartmentLight(String department);
+    List<EmployeeProjection> findByDepartmentLight(String department);
+    
+    @Query(value = "{ 'department': ?0 }", fields = "{ 'name': 1, '_id': 0 }")
+    List<Employee> findEmpNameByDepartment(String department);
 }
