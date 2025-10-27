@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package UserProto;
+
+option java_package = "com.mongodb";
+option java_outer_classname = "UserProto";
+
+message User {
+  int32 id = 1;
+  string name = 2;
+  bool active = 3;
+}

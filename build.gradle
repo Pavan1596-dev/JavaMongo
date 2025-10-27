@@ -1,7 +1,8 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.4.10'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+    id 'org.springframework.boot' version '3.4.10'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id "com.google.protobuf" version "0.9.3"
 }
 
 group = 'com.mongodb'
@@ -9,25 +10,52 @@ version = '0.0.1-SNAPSHOT'
 description = 'Demo project for Mongo DB'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    implementation "com.google.protobuf:protobuf-java:3.24.0" 
+    implementation "com.google.protobuf:protobuf-java-util:3.24.0" // for JSON support (optional)
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+// Configure Protobuf plugin
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.24.0"
+    }
+    generatedFilesBaseDir = "$projectDir/build/generated"
+}
+
+// Include generated code in the Java source sets
+sourceSets {
+    main {
+        java {
+            srcDirs += 'build/generated/source/proto/main/java'
+        }
+    }
+    
+    test {
+        java {
+            // include main generated sources in test too
+            srcDirs += 'build/generated/source/proto/test/java'
+        }
+    }
+}
+
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
